@@ -2,10 +2,6 @@ import { useState } from 'react';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   Table,
   TableBody,
@@ -13,21 +9,15 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import GitHubIcon from '@mui/icons-material/GitHub';
-
-interface Application {
-  id: number;
-  name: string;
-  status: 'ok' | 'error' | 'warning';
-  repository: string;
-  gitUrl: string;
-}
+import { useNavigate } from 'react-router-dom';
+import { useApplications } from './ApplicationsContext';
+import type { Application } from './ApplicationsContext';
 
 const statusColors = {
   ok: 'success.main',
@@ -35,52 +25,20 @@ const statusColors = {
   warning: 'warning.main',
 } as const;
 
-const dummyApps: Application[] = [
-  { id: 1, name: 'Inventory', status: 'ok', repository: 'git', gitUrl: 'https://example.com/inventory.git' },
-  { id: 2, name: 'Billing', status: 'error', repository: 'git', gitUrl: 'https://example.com/billing.git' },
-  { id: 3, name: 'Shipping', status: 'warning', repository: 'git', gitUrl: 'https://example.com/shipping.git' },
-];
-
 export default function Applications() {
-  const [apps, setApps] = useState<Application[]>(dummyApps);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<Application | null>(null);
-  const [name, setName] = useState('');
-  const [repository, setRepository] = useState('');
-  const [gitUrl, setGitUrl] = useState('');
+  const { apps } = useApplications();
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const openAdd = () => {
-    setEditing(null);
-    setName('');
-    setRepository('');
-    setGitUrl('');
-    setDialogOpen(true);
-  };
-
-  const openEdit = (app: Application) => {
-    setEditing(app);
-    setName(app.name);
-    setRepository(app.repository);
-    setGitUrl(app.gitUrl);
-    setDialogOpen(true);
-  };
-
-  const handleSave = () => {
-    if (editing) {
-      setApps(apps.map(a => (a.id === editing.id ? { ...editing, name, repository, gitUrl } : a)));
-    } else {
-      setApps([...apps, { id: Date.now(), name, status: 'ok', repository, gitUrl }]);
-    }
-    setDialogOpen(false);
-  };
 
   const handleChangePage = (_: unknown, newPage: number) => setPage(newPage);
   const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
   };
+
+  const openAdd = () => navigate('/applications/new');
+  const openEdit = (app: Application) => navigate(`/applications/${app.id}/edit`);
 
   return (
     <Box sx={{ width: '100%', height: '100%', p: 0, m: 0 }}>
@@ -127,20 +85,6 @@ export default function Applications() {
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>{editing ? 'Edit Application' : 'Add Application'}</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-          <TextField label="Name" value={name} onChange={e => setName(e.target.value)} fullWidth />
-          <TextField label="Repository" value={repository} onChange={e => setRepository(e.target.value)} fullWidth />
-          <TextField label="Git URL" value={gitUrl} onChange={e => setGitUrl(e.target.value)} fullWidth />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }
