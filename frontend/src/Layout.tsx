@@ -83,7 +83,7 @@ export default function Layout() {
             >
               <ListItemText
                 primary={section.items[0].text}
-                primaryTypographyProps={{ fontSize: '0.8rem' }}
+                primaryTypographyProps={{ fontSize: '0.8rem', fontFamily: 'Inter' }}
               />
             </ListItemButton>
           ) : ['Business view', 'Tech view'].includes(section.heading) ? (
@@ -91,7 +91,7 @@ export default function Layout() {
               <ListItemButton onClick={() => toggleSection(section.heading)} sx={{ mt: 2 }}>
                 <ListItemText
                   primary={section.heading}
-                  primaryTypographyProps={{ fontSize: '0.8rem' }}
+                  primaryTypographyProps={{ fontSize: '0.8rem', fontFamily: 'Inter' }}
                 />
                 {openSections[section.heading as keyof typeof openSections] ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -107,7 +107,7 @@ export default function Layout() {
                       >
                         <ListItemText
                           primary={item.text}
-                          primaryTypographyProps={{ fontSize: '0.8rem' }}
+                          primaryTypographyProps={{ fontSize: '0.8rem', fontFamily: 'Inter' }}
                         />
                       </ListItemButton>
                     </ListItem>
@@ -126,7 +126,7 @@ export default function Layout() {
                     <ListItemButton component={Link} to={item.path} onClick={toggleDrawer}>
                       <ListItemText
                         primary={item.text}
-                        primaryTypographyProps={{ fontSize: '0.8rem' }}
+                        primaryTypographyProps={{ fontSize: '0.8rem', fontFamily: 'Inter' }}
                       />
                     </ListItemButton>
                   </ListItem>

@@ -15,6 +15,15 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Sora, system-ui, Avenir, Helvetica, Arial, sans-serif',
+    h1: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    h2: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    h3: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    h4: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    h5: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    h6: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    subtitle1: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    subtitle2: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
+    button: { fontFamily: 'Inter, Sora, system-ui, Avenir, Helvetica, Arial, sans-serif' },
   },
 });
 
