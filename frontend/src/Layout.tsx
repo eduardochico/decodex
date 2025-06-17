@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -36,7 +37,12 @@ const sections = [
 
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
+  const openUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setUserAnchorEl(event.currentTarget);
+  };
+  const closeUserMenu = () => setUserAnchorEl(null);
 
   const drawer = (
     <div>
@@ -70,6 +76,17 @@ export default function Layout() {
           <IconButton color="inherit">
             <SettingsIcon />
           </IconButton>
+          <IconButton color="inherit" onClick={openUserMenu} sx={{ ml: 1 }}>
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            anchorEl={userAnchorEl}
+            open={Boolean(userAnchorEl)}
+            onClose={closeUserMenu}
+          >
+            <MenuItem onClick={closeUserMenu}>User Profile</MenuItem>
+            <MenuItem onClick={closeUserMenu}>Logout</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>

@@ -7,14 +7,19 @@ import Login from './Login';
 import { Placeholder } from './pages';
 import Applications from './Applications';
 
-const theme = extendTheme({});
+const theme = extendTheme({
+  colorSchemes: {
+    light: {},
+    dark: {},
+  },
+});
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   if (!loggedIn) {
     return (
-      <CssVarsProvider theme={theme}>
+      <CssVarsProvider theme={theme} defaultMode="dark">
         <CssBaseline />
         <Login onLogin={() => setLoggedIn(true)} />
       </CssVarsProvider>
@@ -22,7 +27,7 @@ function App() {
   }
 
   return (
-    <CssVarsProvider theme={theme}>
+    <CssVarsProvider theme={theme} defaultMode="dark">
       <CssBaseline />
       <BrowserRouter>
         <Routes>
