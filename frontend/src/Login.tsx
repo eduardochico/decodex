@@ -4,8 +4,8 @@ import { useState } from 'react';
 interface Props { onLogin: () => void }
 
 export default function Login({ onLogin }: Props) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('admin');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ export default function Login({ onLogin }: Props) {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: 300 }}>
         <Typography variant="h5" textAlign="center">Decodex Login</Typography>
         <TextField label="Username" value={username} onChange={e => setUsername(e.target.value)} required />
