@@ -142,7 +142,7 @@ export default function Layout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1, ml: { sm: drawerOpen ? `${drawerWidth}px` : 0 } }}>
+      <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <IconButton color="inherit" edge="start" onClick={toggleDrawer} sx={{ mr: 2 }}>
             <MenuIcon />
@@ -180,7 +180,7 @@ export default function Layout() {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3, ml: { sm: drawerOpen ? `${drawerWidth}px` : 0 } }}
+        sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3 }}
       >
         <Toolbar />
         <Outlet />
