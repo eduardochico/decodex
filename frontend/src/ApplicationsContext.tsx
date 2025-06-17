@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export interface Application {
   id: number;
@@ -14,22 +14,33 @@ interface ApplicationsContextType {
   updateApp: (app: Application) => void;
 }
 
-const dummyApps: Application[] = [
-  { id: 1, name: 'Inventory', status: 'ok', repository: 'git', gitUrl: 'https://example.com/inventory.git' },
-  { id: 2, name: 'Billing', status: 'error', repository: 'git', gitUrl: 'https://example.com/billing.git' },
-  { id: 3, name: 'Shipping', status: 'warning', repository: 'git', gitUrl: 'https://example.com/shipping.git' },
-];
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const ApplicationsContext = createContext<ApplicationsContextType | undefined>(undefined);
 
 export const ApplicationsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [apps, setApps] = useState<Application[]>(dummyApps);
+  const [apps, setApps] = useState<Application[]>([]);
 
-  const addApp = (app: Omit<Application, 'id' | 'status'>) => {
-    setApps(prev => [...prev, { id: Date.now(), status: 'ok', ...app }]);
+  useEffect(() => {
+    fetch(`${API_URL}/applications`).then(r => r.json()).then(setApps).catch(() => setApps([]));
+  }, []);
+
+  const addApp = async (app: Omit<Application, 'id' | 'status'>) => {
+    const res = await fetch(`${API_URL}/applications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(app),
+    });
+    const created = await res.json();
+    setApps(prev => [...prev, created]);
   };
 
-  const updateApp = (updated: Application) => {
+  const updateApp = async (updated: Application) => {
+    await fetch(`${API_URL}/applications/${updated.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated),
+    });
     setApps(prev => prev.map(a => (a.id === updated.id ? updated : a)));
   };
 
