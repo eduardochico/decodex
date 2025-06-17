@@ -56,8 +56,8 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
   const [openSections, setOpenSections] = useState({
-    'Business view': true,
-    'Tech view': true,
+    'Business view': false,
+    'Tech view': false,
   });
   const location = useLocation();
   const openUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -72,10 +72,25 @@ export default function Layout() {
       <Toolbar />
       {sections.map(section => (
         <Box key={section.heading} sx={{ px: 2 }}>
-          {['Business view', 'Tech view'].includes(section.heading) ? (
+          {section.heading === 'Applications' ? (
+            <ListItemButton
+              onClick={() => setMobileOpen(false)}
+              component={Link}
+              to={section.items[0].path}
+              sx={{ mt: 2 }}
+            >
+              <ListItemText
+                primary={section.items[0].text}
+                primaryTypographyProps={{ fontSize: '0.8rem' }}
+              />
+            </ListItemButton>
+          ) : ['Business view', 'Tech view'].includes(section.heading) ? (
             <>
               <ListItemButton onClick={() => toggleSection(section.heading)} sx={{ mt: 2 }}>
-                <ListItemText primary={section.heading} />
+                <ListItemText
+                  primary={section.heading}
+                  primaryTypographyProps={{ fontSize: '0.8rem' }}
+                />
                 {openSections[section.heading as keyof typeof openSections] ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openSections[section.heading as keyof typeof openSections]} timeout="auto" unmountOnExit>
@@ -88,7 +103,10 @@ export default function Layout() {
                         onClick={() => setMobileOpen(false)}
                         sx={{ pl: 4 }}
                       >
-                        <ListItemText primary={item.text} />
+                        <ListItemText
+                          primary={item.text}
+                          primaryTypographyProps={{ fontSize: '0.8rem' }}
+                        />
                       </ListItemButton>
                     </ListItem>
                   ))}
@@ -97,14 +115,17 @@ export default function Layout() {
             </>
           ) : (
             <>
-              <Typography variant="subtitle1" sx={{ mt: 2 }}>
+              <Typography variant="subtitle1" sx={{ mt: 2, fontSize: '0.8rem' }}>
                 {section.heading}
               </Typography>
               <List>
                 {section.items.map(item => (
                   <ListItem key={item.text} disablePadding>
                     <ListItemButton component={Link} to={item.path} onClick={() => setMobileOpen(false)}>
-                      <ListItemText primary={item.text} />
+                      <ListItemText
+                        primary={item.text}
+                        primaryTypographyProps={{ fontSize: '0.8rem' }}
+                      />
                     </ListItemButton>
                   </ListItem>
                 ))}
