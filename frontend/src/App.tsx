@@ -1,27 +1,28 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssVarsProvider, extendTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './Layout';
 import Login from './Login';
 import { Placeholder } from './pages';
+import Applications from './Applications';
 
-const theme = createTheme({});
+const theme = extendTheme({});
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   if (!loggedIn) {
     return (
-      <ThemeProvider theme={theme}>
+      <CssVarsProvider theme={theme}>
         <CssBaseline />
         <Login onLogin={() => setLoggedIn(true)} />
-      </ThemeProvider>
+      </CssVarsProvider>
     );
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <CssVarsProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
@@ -38,10 +39,11 @@ function App() {
             <Route path="testing-coverage" element={<Placeholder title="Testing coverage" />} />
             <Route path="commits-history" element={<Placeholder title="Commits history and evolution" />} />
             <Route path="dangerous-patterns" element={<Placeholder title="Dangerous patterns" />} />
+            <Route path="applications" element={<Applications />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </ThemeProvider>
+    </CssVarsProvider>
   );
 }
 
