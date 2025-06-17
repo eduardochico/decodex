@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './Layout';
 import Login from './Login';
 import { Placeholder } from './pages';
 import Applications from './Applications';
 
-const theme = extendTheme({
-  colorSchemes: {
-    light: {},
-    dark: {},
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
   },
 });
 
@@ -19,15 +18,15 @@ function App() {
 
   if (!loggedIn) {
     return (
-      <CssVarsProvider theme={theme} defaultMode="dark">
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <Login onLogin={() => setLoggedIn(true)} />
-      </CssVarsProvider>
+      </ThemeProvider>
     );
   }
 
   return (
-    <CssVarsProvider theme={theme} defaultMode="dark">
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
@@ -48,7 +47,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
 
