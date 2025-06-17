@@ -8,7 +8,7 @@ export interface Application {
   gitUrl: string;
 }
 
-interface ApplicationsContextType {
+interface AppsContextType {
   apps: Application[];
   addApp: (app: Omit<Application, 'id' | 'status'>) => void;
   updateApp: (app: Application) => void;
@@ -20,9 +20,9 @@ const dummyApps: Application[] = [
   { id: 3, name: 'Shipping', status: 'warning', repository: 'git', gitUrl: 'https://example.com/shipping.git' },
 ];
 
-const ApplicationsContext = createContext<ApplicationsContextType | undefined>(undefined);
+const AppsContext = createContext<AppsContextType | undefined>(undefined);
 
-export const ApplicationsProvider = ({ children }: { children: React.ReactNode }) => {
+export const AppsProvider = ({ children }: { children: React.ReactNode }) => {
   const [apps, setApps] = useState<Application[]>(dummyApps);
 
   const addApp = (app: Omit<Application, 'id' | 'status'>) => {
@@ -34,14 +34,14 @@ export const ApplicationsProvider = ({ children }: { children: React.ReactNode }
   };
 
   return (
-    <ApplicationsContext.Provider value={{ apps, addApp, updateApp }}>
+    <AppsContext.Provider value={{ apps, addApp, updateApp }}>
       {children}
-    </ApplicationsContext.Provider>
+    </AppsContext.Provider>
   );
 };
 
-export const useApplications = () => {
-  const ctx = useContext(ApplicationsContext);
-  if (!ctx) throw new Error('useApplications must be used within ApplicationsProvider');
+export const useApps = () => {
+  const ctx = useContext(AppsContext);
+  if (!ctx) throw new Error('useApps must be used within AppsProvider');
   return ctx;
 };
