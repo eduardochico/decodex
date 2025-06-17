@@ -18,3 +18,17 @@ To create a production build:
 npm run build
 npm run preview
 ```
+
+## Running the backend
+
+The backend is a small NestJS service. Start it in watch mode during development:
+
+```bash
+cd backend
+npm install
+npm run start:dev
+```
+
+The HTTP API will be available on <http://localhost:3000>.
+
+The service expects a MySQL database running locally using the credentials defined in `backend/src/app.module.ts`. A basic schema is available in `backend/schema.sql` and can be imported to initialize the database.
