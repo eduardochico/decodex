@@ -19,6 +19,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 interface Application {
   id: number;
@@ -35,9 +36,9 @@ const statusColors = {
 } as const;
 
 const dummyApps: Application[] = [
-  { id: 1, name: 'Inventory', status: 'ok', repository: 'inventory', gitUrl: 'https://example.com/inventory.git' },
-  { id: 2, name: 'Billing', status: 'error', repository: 'billing', gitUrl: 'https://example.com/billing.git' },
-  { id: 3, name: 'Shipping', status: 'warning', repository: 'shipping', gitUrl: 'https://example.com/shipping.git' },
+  { id: 1, name: 'Inventory', status: 'ok', repository: 'git', gitUrl: 'https://example.com/inventory.git' },
+  { id: 2, name: 'Billing', status: 'error', repository: 'git', gitUrl: 'https://example.com/billing.git' },
+  { id: 3, name: 'Shipping', status: 'warning', repository: 'git', gitUrl: 'https://example.com/shipping.git' },
 ];
 
 export default function Applications() {
@@ -105,7 +106,10 @@ export default function Applications() {
               <TableCell>
                 <FiberManualRecordIcon sx={{ color: statusColors[app.status] }} />
               </TableCell>
-              <TableCell>{app.repository}</TableCell>
+              <TableCell>
+                <GitHubIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+                {app.repository}
+              </TableCell>
               <TableCell align="right">
                 <IconButton onClick={() => openEdit(app)}>
                   <EditIcon />
