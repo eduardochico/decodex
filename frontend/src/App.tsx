@@ -11,6 +11,9 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontFamily: 'Sora, system-ui, Avenir, Helvetica, Arial, sans-serif',
+  },
 });
 
 function App() {
