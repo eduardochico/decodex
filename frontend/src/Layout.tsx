@@ -1,6 +1,23 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  Collapse,
+} from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -38,27 +55,62 @@ const sections = [
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
+  const [openSections, setOpenSections] = useState({
+    'Business view': true,
+    'Tech view': true,
+  });
   const location = useLocation();
   const openUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setUserAnchorEl(event.currentTarget);
   };
   const closeUserMenu = () => setUserAnchorEl(null);
+  const toggleSection = (heading: string) =>
+    setOpenSections(prev => ({ ...prev, [heading]: !prev[heading as keyof typeof prev] }));
 
   const drawer = (
     <div>
       <Toolbar />
       {sections.map(section => (
         <Box key={section.heading} sx={{ px: 2 }}>
-          <Typography variant="subtitle1" sx={{ mt: 2 }}>{section.heading}</Typography>
-          <List>
-            {section.items.map(item => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton component={Link} to={item.path} onClick={() => setMobileOpen(false)}>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          {['Business view', 'Tech view'].includes(section.heading) ? (
+            <>
+              <ListItemButton onClick={() => toggleSection(section.heading)} sx={{ mt: 2 }}>
+                <ListItemText primary={section.heading} />
+                {openSections[section.heading as keyof typeof openSections] ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={openSections[section.heading as keyof typeof openSections]} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {section.items.map(item => (
+                    <ListItem key={item.text} disablePadding>
+                      <ListItemButton
+                        component={Link}
+                        to={item.path}
+                        onClick={() => setMobileOpen(false)}
+                        sx={{ pl: 4 }}
+                      >
+                        <ListItemText primary={item.text} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            </>
+          ) : (
+            <>
+              <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                {section.heading}
+              </Typography>
+              <List>
+                {section.items.map(item => (
+                  <ListItem key={item.text} disablePadding>
+                    <ListItemButton component={Link} to={item.path} onClick={() => setMobileOpen(false)}>
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          )}
         </Box>
       ))}
     </div>
