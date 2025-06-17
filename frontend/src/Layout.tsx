@@ -53,7 +53,7 @@ const sections = [
 ];
 
 export default function Layout() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
   const [openSections, setOpenSections] = useState({
     'Business view': false,
@@ -67,6 +67,8 @@ export default function Layout() {
   const toggleSection = (heading: string) =>
     setOpenSections(prev => ({ ...prev, [heading]: !prev[heading as keyof typeof prev] }));
 
+  const toggleDrawer = () => setDrawerOpen(prev => !prev);
+
   const drawer = (
     <div>
       <Toolbar />
@@ -74,7 +76,7 @@ export default function Layout() {
         <Box key={section.heading} sx={{ px: 2 }}>
           {section.heading === 'Applications' ? (
             <ListItemButton
-              onClick={() => setMobileOpen(false)}
+              onClick={toggleDrawer}
               component={Link}
               to={section.items[0].path}
               sx={{ mt: 2 }}
@@ -100,7 +102,7 @@ export default function Layout() {
                       <ListItemButton
                         component={Link}
                         to={item.path}
-                        onClick={() => setMobileOpen(false)}
+                        onClick={toggleDrawer}
                         sx={{ pl: 4 }}
                       >
                         <ListItemText
@@ -121,7 +123,7 @@ export default function Layout() {
               <List>
                 {section.items.map(item => (
                   <ListItem key={item.text} disablePadding>
-                    <ListItemButton component={Link} to={item.path} onClick={() => setMobileOpen(false)}>
+                    <ListItemButton component={Link} to={item.path} onClick={toggleDrawer}>
                       <ListItemText
                         primary={item.text}
                         primaryTypographyProps={{ fontSize: '0.8rem' }}
@@ -140,9 +142,9 @@ export default function Layout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: theme => theme.zIndex.drawer + 1, ml: { sm: drawerOpen ? `${drawerWidth}px` : 0 } }}>
         <Toolbar>
-          <IconButton color="inherit" edge="start" onClick={() => setMobileOpen(!mobileOpen)} sx={{ mr: 2 }}>
+          <IconButton color="inherit" edge="start" onClick={toggleDrawer} sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>Decodex</Typography>
@@ -152,25 +154,34 @@ export default function Layout() {
           <IconButton color="inherit" onClick={openUserMenu} sx={{ ml: 1 }}>
             <AccountCircle />
           </IconButton>
-          <Menu
-            anchorEl={userAnchorEl}
-            open={Boolean(userAnchorEl)}
-            onClose={closeUserMenu}
-          >
+          <Menu anchorEl={userAnchorEl} open={Boolean(userAnchorEl)} onClose={closeUserMenu}>
             <MenuItem onClick={closeUserMenu}>User Profile</MenuItem>
             <MenuItem onClick={closeUserMenu}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
-      <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
-        <Drawer variant="temporary" open={mobileOpen} onClose={() => setMobileOpen(false)} ModalProps={{ keepMounted: true }} sx={{ display: { xs: 'block', sm: 'none' }, '& .MuiDrawer-paper': { width: drawerWidth } }}>
+      <Box component="nav" sx={{ width: { sm: drawerOpen ? drawerWidth : 0 }, flexShrink: { sm: 0 } }}>
+        <Drawer
+          variant="temporary"
+          open={drawerOpen}
+          onClose={toggleDrawer}
+          ModalProps={{ keepMounted: true }}
+          sx={{ display: { xs: 'block', sm: 'none' }, '& .MuiDrawer-paper': { width: drawerWidth } }}
+        >
           {drawer}
         </Drawer>
-        <Drawer variant="permanent" sx={{ display: { xs: 'none', sm: 'block' }, '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' } }} open>
+        <Drawer
+          variant="persistent"
+          open={drawerOpen}
+          sx={{ display: { xs: 'none', sm: 'block' }, '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' } }}
+        >
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3, ml: { sm: drawerOpen ? `${drawerWidth}px` : 0 } }}
+      >
         <Toolbar />
         <Outlet />
       </Box>
