@@ -20,6 +20,7 @@ const sections = [
   {
     heading: 'Tech view',
     items: [
+      { text: 'Applications', path: '/applications' },
       { text: 'Detailed Architecture', path: '/detailed-architecture' },
       { text: 'External Dependencies', path: '/external-dependencies' },
       { text: 'Modules and complexity', path: '/modules-complexity' },
