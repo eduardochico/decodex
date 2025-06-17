@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -7,6 +7,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 const drawerWidth = 240;
 
 const sections = [
+  {
+    heading: 'Applications',
+    items: [{ text: 'Applications', path: '/applications' }],
+  },
   {
     heading: 'Business view',
     items: [
@@ -20,7 +24,6 @@ const sections = [
   {
     heading: 'Tech view',
     items: [
-      { text: 'Applications', path: '/applications' },
       { text: 'Detailed Architecture', path: '/detailed-architecture' },
       { text: 'External Dependencies', path: '/external-dependencies' },
       { text: 'Modules and complexity', path: '/modules-complexity' },
@@ -33,6 +36,7 @@ const sections = [
 
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   const drawer = (
     <div>
@@ -76,7 +80,7 @@ export default function Layout() {
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3 }}>
         <Toolbar />
         <Outlet />
       </Box>

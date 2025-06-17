@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -35,12 +34,17 @@ const statusColors = {
   warning: 'warning.main',
 } as const;
 
+const dummyApps: Application[] = [
+  { id: 1, name: 'Inventory', status: 'ok', repository: 'inventory', gitUrl: 'https://example.com/inventory.git' },
+  { id: 2, name: 'Billing', status: 'error', repository: 'billing', gitUrl: 'https://example.com/billing.git' },
+  { id: 3, name: 'Shipping', status: 'warning', repository: 'shipping', gitUrl: 'https://example.com/shipping.git' },
+];
+
 export default function Applications() {
-  const [apps, setApps] = useState<Application[]>([]);
+  const [apps, setApps] = useState<Application[]>(dummyApps);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Application | null>(null);
   const [name, setName] = useState('');
-  const [status, setStatus] = useState<'ok' | 'error' | 'warning'>('ok');
   const [repository, setRepository] = useState('');
   const [gitUrl, setGitUrl] = useState('');
   const [page, setPage] = useState(0);
@@ -49,7 +53,6 @@ export default function Applications() {
   const openAdd = () => {
     setEditing(null);
     setName('');
-    setStatus('ok');
     setRepository('');
     setGitUrl('');
     setDialogOpen(true);
@@ -58,7 +61,6 @@ export default function Applications() {
   const openEdit = (app: Application) => {
     setEditing(app);
     setName(app.name);
-    setStatus(app.status);
     setRepository(app.repository);
     setGitUrl(app.gitUrl);
     setDialogOpen(true);
@@ -66,9 +68,9 @@ export default function Applications() {
 
   const handleSave = () => {
     if (editing) {
-      setApps(apps.map(a => (a.id === editing.id ? { ...editing, name, status, repository, gitUrl } : a)));
+      setApps(apps.map(a => (a.id === editing.id ? { ...editing, name, repository, gitUrl } : a)));
     } else {
-      setApps([...apps, { id: Date.now(), name, status, repository, gitUrl }]);
+      setApps([...apps, { id: Date.now(), name, status: 'ok', repository, gitUrl }]);
     }
     setDialogOpen(false);
   };
@@ -80,7 +82,7 @@ export default function Applications() {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: '100%', height: '100%', p: 0, m: 0 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h4">Applications</Typography>
         <Button startIcon={<AddIcon />} variant="contained" onClick={openAdd}>
@@ -125,17 +127,6 @@ export default function Applications() {
         <DialogTitle>{editing ? 'Edit Application' : 'Add Application'}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
           <TextField label="Name" value={name} onChange={e => setName(e.target.value)} fullWidth />
-          <TextField
-            select
-            label="Status"
-            value={status}
-            onChange={e => setStatus(e.target.value as 'ok' | 'error' | 'warning')}
-            fullWidth
-          >
-            <MenuItem value="ok">OK</MenuItem>
-            <MenuItem value="error">Error</MenuItem>
-            <MenuItem value="warning">Warning</MenuItem>
-          </TextField>
           <TextField label="Repository" value={repository} onChange={e => setRepository(e.target.value)} fullWidth />
           <TextField label="Git URL" value={gitUrl} onChange={e => setGitUrl(e.target.value)} fullWidth />
         </DialogContent>
