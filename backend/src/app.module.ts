@@ -6,10 +6,10 @@ import { ApplicationModule } from './application/application.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: process.env.DB_HOST || 'localhost',
       port: 3306,
-      username: 'root',
-      password: 'password',
+      username: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || 'password',
       database: 'decodex',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,

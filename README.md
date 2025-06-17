@@ -31,4 +31,9 @@ npm run start:dev
 
 The HTTP API will be available on <http://localhost:3000>.
 
-The service expects a MySQL database running locally using the credentials defined in `backend/src/app.module.ts`. A basic schema is available in `backend/schema.sql` and can be imported to initialize the database.
+The service expects a MySQL database. The database host, username and password
+are read from the environment variables `DB_HOST`, `DB_USERNAME` and
+`DB_PASSWORD` respectively. When these variables are not provided the service
+falls back to `localhost`, `root` and `password`.
+A basic schema is available in `backend/schema.sql` and can be imported to
+initialize the database.
