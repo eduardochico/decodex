@@ -16,8 +16,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useNavigate } from 'react-router-dom';
-import { useApplications } from './ApplicationsContext';
-import type { Application } from './ApplicationsContext';
+import { useApps } from './AppsContext';
+import type { Application } from './AppsContext';
 
 const statusColors = {
   ok: 'success.main',
@@ -25,8 +25,8 @@ const statusColors = {
   warning: 'warning.main',
 } as const;
 
-export default function Applications() {
-  const { apps } = useApplications();
+export default function Apps() {
+  const { apps } = useApps();
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -37,13 +37,13 @@ export default function Applications() {
     setPage(0);
   };
 
-  const openAdd = () => navigate('/applications/new');
-  const openEdit = (app: Application) => navigate(`/applications/${app.id}/edit`);
+  const openAdd = () => navigate('/apps/new');
+  const openEdit = (app: Application) => navigate(`/apps/${app.id}/edit`);
 
   return (
     <Box sx={{ width: '100%', height: '100%', p: 0, m: 0 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4">Applications</Typography>
+        <Typography variant="h4">Apps</Typography>
         <Button startIcon={<AddIcon />} variant="contained" onClick={openAdd}>
           Add Application
         </Button>

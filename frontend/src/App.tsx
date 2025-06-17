@@ -5,9 +5,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './Layout';
 import Login from './Login';
 import { Placeholder } from './pages';
-import Applications from './Applications';
+import Apps from './Apps';
 import ApplicationForm from './ApplicationForm';
-import { ApplicationsProvider } from './ApplicationsContext';
+import { AppsProvider } from './AppsContext';
 
 const theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ApplicationsProvider>
+      <AppsProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -58,13 +58,13 @@ function App() {
               <Route path="testing-coverage" element={<Placeholder title="Testing coverage" />} />
               <Route path="commits-history" element={<Placeholder title="Commits history and evolution" />} />
               <Route path="dangerous-patterns" element={<Placeholder title="Dangerous patterns" />} />
-              <Route path="applications" element={<Applications />} />
-              <Route path="applications/new" element={<ApplicationForm />} />
-              <Route path="applications/:id/edit" element={<ApplicationForm />} />
+              <Route path="apps" element={<Apps />} />
+              <Route path="apps/new" element={<ApplicationForm />} />
+              <Route path="apps/:id/edit" element={<ApplicationForm />} />
             </Route>
           </Routes>
         </BrowserRouter>
-      </ApplicationsProvider>
+      </AppsProvider>
     </ThemeProvider>
   );
 }

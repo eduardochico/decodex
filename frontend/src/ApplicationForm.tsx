@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useApplications } from './ApplicationsContext';
+import { useApps } from './AppsContext';
 
 export default function ApplicationForm() {
-  const { addApp, apps, updateApp } = useApplications();
+  const { addApp, apps, updateApp } = useApps();
   const navigate = useNavigate();
   const { id } = useParams();
   const editing = apps.find(a => a.id === Number(id));
@@ -27,7 +27,7 @@ export default function ApplicationForm() {
     } else {
       addApp({ name, repository, gitUrl });
     }
-    navigate('/applications');
+    navigate('/apps');
   };
 
   return (
@@ -39,7 +39,7 @@ export default function ApplicationForm() {
       <TextField label="Repository" value={repository} onChange={e => setRepository(e.target.value)} fullWidth />
       <TextField label="Git URL" value={gitUrl} onChange={e => setGitUrl(e.target.value)} fullWidth />
       <Box display="flex" justifyContent="space-between" mt={2}>
-        <Button onClick={() => navigate('/applications')}>Cancel</Button>
+        <Button onClick={() => navigate('/apps')}>Cancel</Button>
         <Button variant="contained" onClick={handleSave}>Save</Button>
       </Box>
     </Box>
