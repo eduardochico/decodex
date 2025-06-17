@@ -89,7 +89,7 @@ export default function Applications() {
           Add Application
         </Button>
       </Box>
-      <Table>
+      <Table sx={{ minWidth: '100%' }}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
