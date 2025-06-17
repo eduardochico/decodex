@@ -13,10 +13,12 @@ npm run start:dev
 
 The HTTP API will be available on `http://localhost:3000`.
 
-The service connects to a MySQL database. The host, username, password and
-database name can be configured through the environment variables `DB_HOST`,
-`DB_USERNAME`, `DB_PASSWORD` and `DB_NAME`. Default values are `localhost`,
-`root`, `password` and `decodex`.
+Configure the MySQL connection using these environment variables:
+
+- `DB_HOST` – database host (default `localhost`)
+- `DB_USERNAME` – database user (default `root`)
+- `DB_PASSWORD` – database password (default `password`)
+- `DB_NAME` – database name (default `decodex`)
 
 ## Build
 
