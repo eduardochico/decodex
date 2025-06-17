@@ -1,8 +1,12 @@
 # Decodex
 
-Decodex is a tool for analyzing source code. The web UI is located in the `frontend` directory.
+Decodex is a tool for analyzing source code. It consists of a React frontend and a NestJS backend service.
 
-## Running the frontend
+## Frontend
+
+The frontend is located in the `frontend` directory and uses Vite, TypeScript and Material UI.
+
+### Development
 
 ```bash
 cd frontend
@@ -10,18 +14,22 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:5173> in your browser to view the application.
+Open <http://localhost:5173> to view the application.
 
-To create a production build:
+### Building
+
+For a production build and preview:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## Running the backend
+## Backend
 
-The backend is a small NestJS service. Start it in watch mode during development:
+The backend is a minimal NestJS service that exposes CRUD endpoints using MySQL through TypeORM.
+
+### Development
 
 ```bash
 cd backend
@@ -38,5 +46,12 @@ Configure the MySQL connection using these environment variables:
 - `DB_PASSWORD` – database password (default `password`)
 - `DB_NAME` – database name (default `decodex`)
 
-A basic schema is available in `backend/schema.sql` and can be imported to
-initialize the database.
+A basic schema is available in `backend/schema.sql` and can be imported to initialize the database.
+
+### Build
+
+```bash
+npm run build
+```
+
+The build output is generated in `dist/`.
