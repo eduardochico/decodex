@@ -26,8 +26,8 @@ const drawerWidth = 240;
 
 const sections = [
   {
-    heading: 'Apps',
-    items: [{ text: 'Apps', path: '/apps' }],
+    heading: 'Applications',
+    items: [{ text: 'Applications', path: '/applications' }],
   },
   {
     heading: 'Business view',
@@ -74,7 +74,7 @@ export default function Layout() {
       <Toolbar />
       {sections.map(section => (
         <Box key={section.heading} sx={{ px: 2 }}>
-          {section.heading === 'Apps' ? (
+          {section.heading === 'Applications' ? (
             <ListItemButton
               onClick={toggleDrawer}
               component={Link}
@@ -180,7 +180,7 @@ export default function Layout() {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: location.pathname === '/apps' ? 0 : 3 }}
+        sx={{ flexGrow: 1, p: location.pathname === '/applications' ? 0 : 3 }}
       >
         <Toolbar />
         <Outlet />
