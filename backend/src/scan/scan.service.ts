@@ -49,21 +49,21 @@ export class ScanService {
       return;
     }
 
-    const grammarRepos: Record<string, string> = {
-      javascript: 'https://github.com/tree-sitter/tree-sitter-javascript.git',
-      typescript: 'https://github.com/tree-sitter/tree-sitter-typescript.git',
-      python: 'https://github.com/tree-sitter/tree-sitter-python.git',
-      go: 'https://github.com/tree-sitter/tree-sitter-go.git',
-      rust: 'https://github.com/tree-sitter/tree-sitter-rust.git',
-      java: 'https://github.com/tree-sitter/tree-sitter-java.git',
-      c: 'https://github.com/tree-sitter/tree-sitter-c.git',
-      cpp: 'https://github.com/tree-sitter/tree-sitter-cpp.git',
-      ruby: 'https://github.com/tree-sitter/tree-sitter-ruby.git',
-      php: 'https://github.com/tree-sitter/tree-sitter-php.git',
+    const grammarPkgs: Record<string, string> = {
+      javascript: 'tree-sitter-javascript',
+      typescript: 'tree-sitter-typescript',
+      python: 'tree-sitter-python',
+      go: 'tree-sitter-go',
+      rust: 'tree-sitter-rust',
+      java: 'tree-sitter-java',
+      c: 'tree-sitter-c',
+      cpp: 'tree-sitter-cpp',
+      ruby: 'tree-sitter-ruby',
+      php: 'tree-sitter-php',
     };
 
-    const grammarRepo = grammarRepos[app.language];
-    if (!grammarRepo) {
+    const grammarPkg = grammarPkgs[app.language];
+    if (!grammarPkg) {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Language not supported by tree-sitter',
@@ -72,7 +72,7 @@ export class ScanService {
     }
 
     try {
-      const output = await runTreeSitter(app.gitUrl, grammarRepo);
+      const output = await runTreeSitter(app.gitUrl, grammarPkg);
       await this.repo.update(scanId, { status: 'completed', output });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);

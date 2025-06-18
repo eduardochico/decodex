@@ -28,18 +28,13 @@ async function collectFiles(dir: string, ext: string, files: string[] = []): Pro
   return files;
 }
 
-export async function runTreeSitter(repoUrl: string, grammarRepoUrl: string): Promise<string> {
+export async function runTreeSitter(repoUrl: string, grammarModule: string): Promise<string> {
   const workDir = await mkdtemp(join(tmpdir(), 'tree-sitter-'));
   const targetDir = join(workDir, 'target');
-  const grammarDir = join(workDir, 'grammar');
 
   await exec('git', ['clone', repoUrl, targetDir]);
-  await exec('git', ['clone', grammarRepoUrl, grammarDir]);
 
-  await exec('npm', ['install', '--silent'], { cwd: grammarDir });
-  await exec('npx', ['tree-sitter', 'generate'], { cwd: grammarDir });
-
-  const Language = require(grammarDir);
+  const Language = require(grammarModule);
   const parser = new Parser();
   parser.setLanguage(Language);
 
