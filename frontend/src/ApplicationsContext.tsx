@@ -6,6 +6,7 @@ export interface Application {
   status: 'ok' | 'error' | 'warning';
   repository: string;
   gitUrl: string;
+  language: string;
 }
 
 interface ApplicationsContextType {

@@ -56,24 +56,26 @@ export default function Applications() {
             <TableCell>Name</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Repository</TableCell>
+            <TableCell>Language</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {apps.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(app => (
-            <TableRow key={app.id}>
-              <TableCell>{app.name}</TableCell>
-              <TableCell>
-                <FiberManualRecordIcon sx={{ color: statusColors[app.status] }} />
-              </TableCell>
-              <TableCell>
-                <GitHubIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-                {app.repository}
-              </TableCell>
-              <TableCell align="right">
-                <IconButton onClick={() => openScan(app)}>
-                  <PlayArrowIcon />
-                </IconButton>
+          <TableRow key={app.id}>
+            <TableCell>{app.name}</TableCell>
+            <TableCell>
+              <FiberManualRecordIcon sx={{ color: statusColors[app.status] }} />
+            </TableCell>
+            <TableCell>
+              <GitHubIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+              {app.repository}
+            </TableCell>
+            <TableCell>{app.language}</TableCell>
+            <TableCell align="right">
+              <IconButton onClick={() => openScan(app)}>
+                <PlayArrowIcon />
+              </IconButton>
                 <IconButton onClick={() => openEdit(app)}>
                   <EditIcon />
                 </IconButton>
