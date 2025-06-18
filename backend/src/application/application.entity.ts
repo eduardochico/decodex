@@ -16,6 +16,9 @@ export class Application {
   @Column({ name: 'git_url' })
   gitUrl!: string;
 
+  @Column()
+  language!: string;
+
   @Column({ default: 'ok' })
   status!: Status;
 
