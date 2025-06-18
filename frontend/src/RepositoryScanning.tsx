@@ -97,7 +97,7 @@ export default function RepositoryScanning() {
                 )}
               </TableCell>
               <TableCell>
-                {log.status === 'completed' && (
+                {(log.status === 'completed' || log.status === 'error') && (
                   <Button size="small" onClick={() => alert(log.output)}>
                     View output
                   </Button>
