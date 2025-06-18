@@ -15,6 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useNavigate } from 'react-router-dom';
 import { useApplications } from './ApplicationsContext';
 import type { Application } from './ApplicationsContext';
@@ -39,6 +40,7 @@ export default function Applications() {
 
   const openAdd = () => navigate('/applications/new');
   const openEdit = (app: Application) => navigate(`/applications/${app.id}/edit`);
+  const openScan = (app: Application) => navigate(`/applications/${app.id}/scan`);
 
   return (
     <Box sx={{ width: '100%', height: '100%', p: 0, m: 0 }}>
@@ -69,6 +71,9 @@ export default function Applications() {
                 {app.repository}
               </TableCell>
               <TableCell align="right">
+                <IconButton onClick={() => openScan(app)}>
+                  <PlayArrowIcon />
+                </IconButton>
                 <IconButton onClick={() => openEdit(app)}>
                   <EditIcon />
                 </IconButton>

@@ -7,6 +7,7 @@ import Login from './Login';
 import { Placeholder } from './pages';
 import Applications from './Applications';
 import ApplicationForm from './ApplicationForm';
+import RepositoryScanning from './RepositoryScanning';
 import { ApplicationsProvider } from './ApplicationsContext';
 
 const theme = createTheme({
@@ -61,6 +62,7 @@ function App() {
               <Route path="applications" element={<Applications />} />
               <Route path="applications/new" element={<ApplicationForm />} />
               <Route path="applications/:id/edit" element={<ApplicationForm />} />
+              <Route path="applications/:id/scan" element={<RepositoryScanning />} />
             </Route>
           </Routes>
         </BrowserRouter>
