@@ -72,7 +72,7 @@ export class ScanService {
       return;
     }
 
-    const script = join(__dirname, '../../scripts/run-tree-sitter.sh');
+    const script = join(__dirname, '../../../scripts/run-tree-sitter.sh');
     const child = spawn('bash', [script, app.gitUrl, grammarRepo]);
 
     let output = '';
