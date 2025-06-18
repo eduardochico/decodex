@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useApplications } from './ApplicationsContext';
 
@@ -21,8 +22,9 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 interface ScanLog {
   id: number;
-  status: 'success' | 'error';
+  status: 'scanning' | 'completed' | 'error';
   createdAt: string;
+  output?: string;
 }
 
 export default function RepositoryScanning() {
@@ -40,8 +42,21 @@ export default function RepositoryScanning() {
       .catch(() => setLogs([]));
   }, [id]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!id) return;
+      fetch(`${API_URL}/applications/${id}/scans`)
+        .then(r => r.json())
+        .then(setLogs)
+        .catch(() => {});
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [id]);
+
   const runScan = async () => {
     if (!id) return;
+    const ok = window.confirm('Run repository scan? This may take several minutes.');
+    if (!ok) return;
     const res = await fetch(`${API_URL}/applications/${id}/scans`, { method: 'POST' });
     const created = await res.json();
     setLogs(prev => [created, ...prev]);
@@ -64,6 +79,7 @@ export default function RepositoryScanning() {
             <TableCell>Run</TableCell>
             <TableCell>Timestamp</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -72,10 +88,19 @@ export default function RepositoryScanning() {
               <TableCell>{log.id}</TableCell>
               <TableCell>{new Date(log.createdAt).toLocaleString()}</TableCell>
               <TableCell>
-                {log.status === 'success' ? (
+                {log.status === 'completed' ? (
                   <CheckCircleIcon color="success" />
-                ) : (
+                ) : log.status === 'error' ? (
                   <ErrorIcon color="error" />
+                ) : (
+                  <AutorenewIcon sx={{ color: 'info.main' }} />
+                )}
+              </TableCell>
+              <TableCell>
+                {log.status === 'completed' && (
+                  <Button size="small" onClick={() => alert(log.output)}>
+                    View output
+                  </Button>
                 )}
               </TableCell>
             </TableRow>
