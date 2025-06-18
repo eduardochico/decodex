@@ -10,6 +10,10 @@ import {
   Typography,
   IconButton,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -33,6 +37,7 @@ export default function RepositoryScanning() {
   const { apps } = useApplications();
   const app = apps.find(a => a.id === Number(id));
   const [logs, setLogs] = useState<ScanLog[]>([]);
+  const [selectedLog, setSelectedLog] = useState<ScanLog | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -98,7 +103,7 @@ export default function RepositoryScanning() {
               </TableCell>
               <TableCell>
                 {(log.status === 'completed' || log.status === 'error') && (
-                  <Button size="small" onClick={() => alert(log.output)}>
+                  <Button size="small" onClick={() => setSelectedLog(log)}>
                     View output
                   </Button>
                 )}
@@ -107,6 +112,17 @@ export default function RepositoryScanning() {
           ))}
         </TableBody>
       </Table>
+      <Dialog open={Boolean(selectedLog)} onClose={() => setSelectedLog(null)} fullWidth maxWidth="md">
+        <DialogTitle>Scan Output</DialogTitle>
+        <DialogContent dividers>
+          <Box component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', m: 0 }}>
+            {selectedLog?.output}
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSelectedLog(null)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
