@@ -48,6 +48,11 @@ npm install
 npm run start:dev
 ```
 
+The project declares several Tree-sitter grammars as dependencies. Running
+`npm install` fetches them automatically. These packages are required by the
+scanner; without them the service will error with messages such as
+`Cannot find module 'tree-sitter-typescript'`.
+
 The HTTP API will be available on <http://localhost:3000>.
 
 Configure the MySQL connection using these environment variables:
