@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { spawn } from 'child_process';
-import { join } from 'path';
+import { runTreeSitter } from '../utils/tree-sitter-runner';
 import { Scan } from './scan.entity';
 import { Application } from '../application/application.entity';
 
@@ -72,30 +71,12 @@ export class ScanService {
       return;
     }
 
-    const script = join(__dirname, '../../../scripts/run-tree-sitter.sh');
-    const child = spawn('bash', [script, app.gitUrl, grammarRepo]);
-
-    let output = '';
-    child.stdout.on('data', data => {
-      output += data.toString();
-    });
-    child.stderr.on('data', data => {
-      output += data.toString();
-    });
-
-    child.on('close', async code => {
-      await this.repo.update(scanId, {
-        status: code === 0 ? 'completed' : 'error',
-        output,
-      });
-    });
-
-    child.on('error', async err => {
-      output += err.message;
-      await this.repo.update(scanId, {
-        status: 'error',
-        output,
-      });
-    });
+    try {
+      const output = await runTreeSitter(app.gitUrl, grammarRepo);
+      await this.repo.update(scanId, { status: 'completed', output });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      await this.repo.update(scanId, { status: 'error', output: message });
+    }
   }
 }
