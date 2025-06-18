@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Scan } from './scan.entity';
 import { ScanService } from './scan.service';
 import { ScanController } from './scan.controller';
+import { Application } from '../application/application.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Scan])],
+  imports: [TypeOrmModule.forFeature([Scan, Application])],
   providers: [ScanService],
   controllers: [ScanController],
 })

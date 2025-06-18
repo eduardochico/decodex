@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn } from 'typeorm';
 import { Application } from '../application/application.entity';
 
-export type ScanStatus = 'success' | 'error';
+export type ScanStatus = 'scanning' | 'completed' | 'error';
 
 @Entity('repository_scans')
 export class Scan {
@@ -11,8 +11,11 @@ export class Scan {
   @ManyToOne(() => Application, { onDelete: 'CASCADE' })
   application!: Application;
 
-  @Column({ default: 'success' })
+  @Column({ default: 'scanning' })
   status!: ScanStatus;
+
+  @Column({ type: 'longtext', nullable: true })
+  output?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
