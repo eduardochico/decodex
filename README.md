@@ -66,3 +66,13 @@ npm run build
 ```
 
 The build output is generated in `dist/`.
+
+## Scripts
+
+A helper script `scripts/run-tree-sitter.sh` clones a repository and uses tree-sitter to parse all JavaScript files. Usage:
+
+```bash
+./scripts/run-tree-sitter.sh <repo_url> <grammar_repo_url>
+```
+
+The script creates a temporary working directory, clones both repositories, generates the grammar, and parses each `*.js` file found in the target repository.
