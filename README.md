@@ -16,6 +16,17 @@ npm run dev
 
 Open <http://localhost:5173> to view the application.
 
+### Environment variables
+
+You can override the backend API URL used by the frontend by creating a `.env`
+file in the `frontend` directory:
+
+```bash
+VITE_API_URL=http://localhost:3000
+```
+
+If omitted, the application defaults to `http://localhost:3000`.
+
 ### Building
 
 For a production build and preview:
