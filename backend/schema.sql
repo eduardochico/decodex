@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `scan_files` (
   `filename` varchar(1024) NOT NULL,
   `source` longtext NOT NULL,
   `parse` longtext NOT NULL,
+  `analysis` longtext,
   PRIMARY KEY (`id`),
   KEY `scan_id_idx` (`scan_id`),
   CONSTRAINT `fk_scan` FOREIGN KEY (`scan_id`) REFERENCES `repository_scans`(`id`) ON DELETE CASCADE

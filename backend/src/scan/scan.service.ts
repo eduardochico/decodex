@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { runTreeSitter, FileParseResult } from '../utils/tree-sitter-runner';
+import { runTreeSitter } from '../utils/tree-sitter-runner';
 import { Scan } from './scan.entity';
 import { ScanFile } from './scan-file.entity';
 import { Application } from '../application/application.entity';
+import { LlmService } from '../llm/llm.service';
 
 @Injectable()
 export class ScanService {
@@ -15,6 +16,7 @@ export class ScanService {
     private fileRepo: Repository<ScanFile>,
     @InjectRepository(Application)
     private appRepo: Repository<Application>,
+    private llm: LlmService,
   ) {}
 
   findForApplication(appId: number) {
@@ -87,14 +89,23 @@ export class ScanService {
         grammar.module,
         grammar.ext,
       );
-      await this.fileRepo.save(
-        results.map(r => ({
+      const filesWithAnalysis: Partial<ScanFile>[] = [];
+      for (const r of results) {
+        let analysis = '';
+        try {
+          analysis = await this.llm.describeAst(r.parse);
+        } catch (e) {
+          analysis = `LLM error: ${e instanceof Error ? e.message : String(e)}`;
+        }
+        filesWithAnalysis.push({
           scan: { id: scanId } as Scan,
           filename: r.filename,
           source: r.source,
           parse: r.parse,
-        })),
-      );
+          analysis,
+        });
+      }
+      await this.fileRepo.save(filesWithAnalysis);
       await this.repo.update(scanId, { status: 'completed' });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
