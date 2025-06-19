@@ -32,6 +32,7 @@ export class ScanService {
       status: 'scanning',
     });
     await this.repo.save(scan);
+    await this.appRepo.update(appId, { status: 'warning' });
     this.runScan(scan.id, appId);
     return scan;
   }
@@ -51,6 +52,7 @@ export class ScanService {
         status: 'error',
         output: 'Application not found',
       });
+      await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Application ${appId} not found`);
       return;
     }
@@ -61,6 +63,7 @@ export class ScanService {
         status: 'error',
         output: 'Invalid repository URL',
       });
+      await this.appRepo.update(appId, { status: 'error' });
       console.log('[scan] Invalid repository URL');
       return;
     }
@@ -84,6 +87,7 @@ export class ScanService {
         status: 'error',
         output: 'Language not supported by tree-sitter',
       });
+      await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Language ${app.language} not supported`);
       return;
     }
@@ -114,10 +118,12 @@ export class ScanService {
       }
       await this.fileRepo.save(filesWithAnalysis);
       await this.repo.update(scanId, { status: 'completed' });
+      await this.appRepo.update(appId, { status: 'ok' });
       console.log(`[scan] Scan ${scanId} completed`);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       await this.repo.update(scanId, { status: 'error', output: message });
+      await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Scan ${scanId} failed: ${message}`);
     }
   }
