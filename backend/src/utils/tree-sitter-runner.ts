@@ -28,7 +28,11 @@ async function collectFiles(dir: string, ext: string, files: string[] = []): Pro
   return files;
 }
 
-export async function runTreeSitter(repoUrl: string, grammarModule: string): Promise<string> {
+export async function runTreeSitter(
+  repoUrl: string,
+  grammarModule: string,
+  ext: string,
+): Promise<string> {
   const workDir = await mkdtemp(join(tmpdir(), 'tree-sitter-'));
   const targetDir = join(workDir, 'target');
 
@@ -38,7 +42,7 @@ export async function runTreeSitter(repoUrl: string, grammarModule: string): Pro
   const parser = new Parser();
   parser.setLanguage(Language);
 
-  const files = await collectFiles(targetDir, '.js');
+  const files = await collectFiles(targetDir, ext);
   let output = '';
   for (const file of files) {
     const code = await readFile(file, 'utf8');
