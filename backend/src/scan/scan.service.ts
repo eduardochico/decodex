@@ -30,6 +30,8 @@ export class ScanService {
     const scan = this.repo.create({
       application: { id: appId } as Application,
       status: 'scanning',
+      stage: 'Queued',
+      progress: 0,
     });
     await this.repo.save(scan);
     await this.appRepo.update(appId, { status: 'warning' });
@@ -46,11 +48,14 @@ export class ScanService {
 
   private async runScan(scanId: number, appId: number) {
     console.log(`[scan] Starting scan ${scanId} for application ${appId}`);
+    await this.repo.update(scanId, { stage: 'Preparing', progress: 0 });
     const app = await this.appRepo.findOne({ where: { id: appId } });
     if (!app) {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Application not found',
+        stage: 'Error',
+        progress: 0,
       });
       await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Application ${appId} not found`);
@@ -62,6 +67,8 @@ export class ScanService {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Invalid repository URL',
+        stage: 'Error',
+        progress: 0,
       });
       await this.appRepo.update(appId, { status: 'error' });
       console.log('[scan] Invalid repository URL');
@@ -86,6 +93,8 @@ export class ScanService {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Language not supported by tree-sitter',
+        stage: 'Error',
+        progress: 0,
       });
       await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Language ${app.language} not supported`);
@@ -94,13 +103,15 @@ export class ScanService {
     console.log(`[scan] Using grammar ${grammar.module} with extension ${grammar.ext}`);
 
     try {
+      await this.repo.update(scanId, { stage: 'Running tree-sitter', progress: 25 });
       const results = await runTreeSitter(app.gitUrl, grammar.module, grammar.ext);
       console.log(`[scan] runTreeSitter returned ${results.length} results`);
+      await this.repo.update(scanId, { stage: 'Analyzing files', progress: 50 });
       const repoParse = results
         .map(r => `File: ${r.filename}\n${r.parse}`)
         .join('\n\n');
       const filesWithAnalysis: Partial<ScanFile>[] = [];
-      for (const r of results) {
+      for (const [index, r] of results.entries()) {
         let analysis = '';
         try {
           analysis = await this.llm.describeFile(repoParse, r.filename, r.source);
@@ -114,14 +125,24 @@ export class ScanService {
           parse: r.parse,
           analysis,
         });
+        const progress = 50 + Math.round(((index + 1) / results.length) * 50);
+        await this.repo.update(scanId, {
+          stage: `Analyzing files (${index + 1}/${results.length})`,
+          progress,
+        });
       }
       await this.fileRepo.save(filesWithAnalysis);
-      await this.repo.update(scanId, { status: 'completed' });
+      await this.repo.update(scanId, { status: 'completed', stage: 'Completed', progress: 100 });
       await this.appRepo.update(appId, { status: 'ok' });
       console.log(`[scan] Scan ${scanId} completed`);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      await this.repo.update(scanId, { status: 'error', output: message });
+      await this.repo.update(scanId, {
+        status: 'error',
+        output: message,
+        stage: 'Error',
+        progress: 0,
+      });
       await this.appRepo.update(appId, { status: 'error' });
       console.log(`[scan] Scan ${scanId} failed: ${message}`);
     }

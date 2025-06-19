@@ -22,6 +22,12 @@ export class Scan {
   @Column({ default: 'scanning' })
   status!: ScanStatus;
 
+  @Column({ nullable: true })
+  stage?: string;
+
+  @Column({ type: 'int', default: 0 })
+  progress!: number;
+
   @Column({ type: 'longtext', nullable: true })
   output?: string;
 

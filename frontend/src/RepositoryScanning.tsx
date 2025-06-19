@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useApplications } from './ApplicationsContext';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -35,6 +34,8 @@ interface ScanLog {
   status: 'scanning' | 'completed' | 'error';
   createdAt: string;
   output?: string;
+  stage?: string;
+  progress: number;
 }
 
 interface FileResult {
@@ -132,7 +133,9 @@ export default function RepositoryScanning() {
                 ) : log.status === 'error' ? (
                   <ErrorIcon color="error" />
                 ) : (
-                  <AutorenewIcon sx={{ color: 'info.main' }} />
+                  <Typography variant="body2">
+                    {log.stage ?? 'Running'} - {log.progress}%
+                  </Typography>
                 )}
               </TableCell>
               <TableCell>
@@ -187,19 +190,6 @@ export default function RepositoryScanning() {
                     wrapLongLines
                   >
                     {files.find(f => f.id === selectedFile)?.source || ''}
-                  </SyntaxHighlighter>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Tree-sitter
-                  </Typography>
-                  <SyntaxHighlighter
-                    language="text"
-                    style={atomDark}
-                    customStyle={{ margin: 0 }}
-                    wrapLongLines
-                  >
-                    {files.find(f => f.id === selectedFile)?.parse || ''}
                   </SyntaxHighlighter>
                 </Box>
                 <Box flex={1}>
