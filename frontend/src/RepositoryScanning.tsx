@@ -14,6 +14,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -33,6 +37,13 @@ interface ScanLog {
   output?: string;
 }
 
+interface FileResult {
+  id: number;
+  filename: string;
+  source: string;
+  parse: string;
+}
+
 export default function RepositoryScanning() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -40,6 +51,26 @@ export default function RepositoryScanning() {
   const app = apps.find(a => a.id === Number(id));
   const [logs, setLogs] = useState<ScanLog[]>([]);
   const [selectedLog, setSelectedLog] = useState<ScanLog | null>(null);
+  const [files, setFiles] = useState<FileResult[]>([]);
+  const [selectedFile, setSelectedFile] = useState<number | ''>('');
+
+  useEffect(() => {
+    if (!selectedLog || !id || selectedLog.status !== 'completed') {
+      setFiles([]);
+      setSelectedFile('');
+      return;
+    }
+    fetch(`${API_URL}/applications/${id}/scans/${selectedLog.id}/files`)
+      .then(r => r.json())
+      .then(data => {
+        setFiles(data);
+        setSelectedFile(data[0]?.id ?? '');
+      })
+      .catch(() => {
+        setFiles([]);
+        setSelectedFile('');
+      });
+  }, [selectedLog, id]);
 
   useEffect(() => {
     if (!id) return;
@@ -114,17 +145,65 @@ export default function RepositoryScanning() {
           ))}
         </TableBody>
       </Table>
-      <Dialog open={Boolean(selectedLog)} onClose={() => setSelectedLog(null)} fullWidth maxWidth="md">
+      <Dialog open={Boolean(selectedLog)} onClose={() => setSelectedLog(null)} fullWidth maxWidth="lg">
         <DialogTitle>Scan Output</DialogTitle>
         <DialogContent dividers>
-          <SyntaxHighlighter
-            language="text"
-            style={atomDark}
-            customStyle={{ margin: 0 }}
-            wrapLongLines
-          >
-            {selectedLog?.output || ''}
-          </SyntaxHighlighter>
+          {selectedLog?.status === 'error' ? (
+            <SyntaxHighlighter
+              language="text"
+              style={atomDark}
+              customStyle={{ margin: 0 }}
+              wrapLongLines
+            >
+              {selectedLog?.output || ''}
+            </SyntaxHighlighter>
+          ) : (
+            <>
+              <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <InputLabel id="file-select-label">File</InputLabel>
+                <Select
+                  labelId="file-select-label"
+                  label="File"
+                  value={selectedFile}
+                  onChange={e => setSelectedFile(e.target.value as number)}
+                >
+                  {files.map(f => (
+                    <MenuItem key={f.id} value={f.id}>
+                      {f.filename}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box display="flex" gap={2}>
+                <Box flex={1}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Source
+                  </Typography>
+                  <SyntaxHighlighter
+                    language={app?.language || 'text'}
+                    style={atomDark}
+                    customStyle={{ margin: 0 }}
+                    wrapLongLines
+                  >
+                    {files.find(f => f.id === selectedFile)?.source || ''}
+                  </SyntaxHighlighter>
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Tree-sitter
+                  </Typography>
+                  <SyntaxHighlighter
+                    language="text"
+                    style={atomDark}
+                    customStyle={{ margin: 0 }}
+                    wrapLongLines
+                  >
+                    {files.find(f => f.id === selectedFile)?.parse || ''}
+                  </SyntaxHighlighter>
+                </Box>
+              </Box>
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSelectedLog(null)}>Close</Button>

@@ -1,6 +1,6 @@
 import { mkdtemp, readFile, rm, readdir } from 'fs/promises';
 import { tmpdir } from 'os';
-import { join } from 'path';
+import { join, relative } from 'path';
 import { spawn } from 'child_process';
 import Parser from 'tree-sitter';
 
@@ -28,11 +28,17 @@ async function collectFiles(dir: string, ext: string, files: string[] = []): Pro
   return files;
 }
 
+export interface FileParseResult {
+  filename: string;
+  source: string;
+  parse: string;
+}
+
 export async function runTreeSitter(
   repoUrl: string,
   grammarModule: string,
   ext: string,
-): Promise<string> {
+): Promise<FileParseResult[]> {
   const workDir = await mkdtemp(join(tmpdir(), 'tree-sitter-'));
   const targetDir = join(workDir, 'target');
 
@@ -43,13 +49,17 @@ export async function runTreeSitter(
   parser.setLanguage(Language);
 
   const files = await collectFiles(targetDir, ext);
-  let output = '';
+  const results: FileParseResult[] = [];
   for (const file of files) {
     const code = await readFile(file, 'utf8');
     const tree = parser.parse(code);
-    output += `File: ${file}\n${tree.rootNode.toString()}\n`;
+    results.push({
+      filename: relative(targetDir, file),
+      source: code,
+      parse: tree.rootNode.toString(),
+    });
   }
 
   await rm(workDir, { recursive: true, force: true });
-  return output;
+  return results;
 }
