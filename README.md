@@ -61,6 +61,7 @@ Configure the MySQL connection using these environment variables:
 - `DB_USERNAME` – database user (default `root`)
 - `DB_PASSWORD` – database password (default `password`)
 - `DB_NAME` – database name (default `decodex`)
+- `OPENAI_API_KEY` – OpenAI API key used for answering questions about scanned code
 
 A basic schema is available in `backend/schema.sql` and can be imported to initialize the database.
 
