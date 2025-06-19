@@ -104,7 +104,7 @@ export class ScanService {
       for (const r of results) {
         let analysis = '';
         try {
-          analysis = await this.llm.describeAst(r.parse);
+          analysis = await this.llm.describeFile(r.source, r.parse);
         } catch (e) {
           analysis = `LLM error: ${e instanceof Error ? e.message : String(e)}`;
         }
