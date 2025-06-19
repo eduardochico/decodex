@@ -42,15 +42,22 @@ export async function runTreeSitter(
   const workDir = await mkdtemp(join(tmpdir(), 'tree-sitter-'));
   const targetDir = join(workDir, 'target');
 
+  console.log(`[tree-sitter] Cloning repository ${repoUrl} into ${targetDir}`);
   await exec('git', ['clone', repoUrl, targetDir]);
+  console.log('[tree-sitter] Clone completed');
 
+  console.log(`[tree-sitter] Loading grammar module ${grammarModule}`);
   const Language = require(grammarModule);
   const parser = new Parser();
   parser.setLanguage(Language);
+  console.log('[tree-sitter] Parser initialized');
 
+  console.log(`[tree-sitter] Collecting files ending with ${ext}`);
   const files = await collectFiles(targetDir, ext);
+  console.log(`[tree-sitter] Found ${files.length} files to parse`);
   const results: FileParseResult[] = [];
   for (const file of files) {
+    console.log(`[tree-sitter] Parsing ${file}`);
     const code = await readFile(file, 'utf8');
     const tree = parser.parse(code);
     results.push({
@@ -60,6 +67,8 @@ export async function runTreeSitter(
     });
   }
 
+  console.log('[tree-sitter] Cleaning up temporary directory');
   await rm(workDir, { recursive: true, force: true });
+  console.log('[tree-sitter] Finished');
   return results;
 }
