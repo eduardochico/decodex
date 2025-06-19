@@ -22,10 +22,10 @@ You can override the backend API URL used by the frontend by creating a `.env`
 file in the `frontend` directory:
 
 ```bash
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=http://localhost:3000
 ```
 
-If omitted, the application defaults to `http://localhost:3001`.
+If omitted, the application defaults to `http://localhost:3000`.
 
 ### Building
 
@@ -53,7 +53,7 @@ The project declares several Tree-sitter grammars as dependencies. Running
 scanner; without them the service will error with messages such as
 `Cannot find module 'tree-sitter-typescript'`.
 
-The HTTP API will be available on <http://localhost:3001>.
+The HTTP API will be available on <http://localhost:3000>.
 
 Configure the MySQL connection using these environment variables:
 
