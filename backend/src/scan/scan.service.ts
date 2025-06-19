@@ -94,17 +94,16 @@ export class ScanService {
     console.log(`[scan] Using grammar ${grammar.module} with extension ${grammar.ext}`);
 
     try {
-      const results = await runTreeSitter(
-        app.gitUrl,
-        grammar.module,
-        grammar.ext,
-      );
+      const results = await runTreeSitter(app.gitUrl, grammar.module, grammar.ext);
       console.log(`[scan] runTreeSitter returned ${results.length} results`);
+      const repoParse = results
+        .map(r => `File: ${r.filename}\n${r.parse}`)
+        .join('\n\n');
       const filesWithAnalysis: Partial<ScanFile>[] = [];
       for (const r of results) {
         let analysis = '';
         try {
-          analysis = await this.llm.describeFile(r.source, r.parse);
+          analysis = await this.llm.describeFile(repoParse, r.filename, r.source);
         } catch (e) {
           analysis = `LLM error: ${e instanceof Error ? e.message : String(e)}`;
         }
