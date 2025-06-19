@@ -43,6 +43,7 @@ interface FileResult {
   filename: string;
   source: string;
   parse: string;
+  structure?: string;
   analysis?: string;
 }
 
@@ -190,6 +191,19 @@ export default function RepositoryScanning() {
                     wrapLongLines
                   >
                     {files.find(f => f.id === selectedFile)?.source || ''}
+                  </SyntaxHighlighter>
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Structure
+                  </Typography>
+                  <SyntaxHighlighter
+                    language="text"
+                    style={atomDark}
+                    customStyle={{ margin: 0 }}
+                    wrapLongLines
+                  >
+                    {files.find(f => f.id === selectedFile)?.structure || ''}
                   </SyntaxHighlighter>
                 </Box>
                 <Box flex={1}>

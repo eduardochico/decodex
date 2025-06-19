@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `scan_files` (
   `filename` varchar(1024) NOT NULL,
   `source` longtext NOT NULL,
   `parse` longtext NOT NULL,
+  `structure` longtext,
   `analysis` longtext,
   PRIMARY KEY (`id`),
   KEY `scan_id_idx` (`scan_id`),

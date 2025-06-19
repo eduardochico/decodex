@@ -19,5 +19,8 @@ export class ScanFile {
   parse!: string;
 
   @Column({ type: 'longtext', nullable: true })
+  structure?: string;
+
+  @Column({ type: 'longtext', nullable: true })
   analysis?: string;
 }
