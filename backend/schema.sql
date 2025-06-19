@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS `repository_scans` (
   `id` int NOT NULL AUTO_INCREMENT,
   `application_id` int NOT NULL,
   `status` enum('scanning','completed','error') DEFAULT 'scanning',
+  `stage` varchar(255) DEFAULT NULL,
+  `progress` int DEFAULT 0,
   `output` longtext,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
