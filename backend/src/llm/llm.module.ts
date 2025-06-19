@@ -8,5 +8,6 @@ import { LlmController } from './llm.controller';
   imports: [TypeOrmModule.forFeature([ScanFile])],
   providers: [LlmService],
   controllers: [LlmController],
+  exports: [LlmService],
 })
 export class LlmModule {}
