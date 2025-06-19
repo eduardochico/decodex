@@ -20,3 +20,14 @@ CREATE TABLE IF NOT EXISTS `repository_scans` (
   KEY `application_id_idx` (`application_id`),
   CONSTRAINT `fk_application` FOREIGN KEY (`application_id`) REFERENCES `applications`(`id`) ON DELETE CASCADE
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `scan_files` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `scan_id` int NOT NULL,
+  `filename` varchar(1024) NOT NULL,
+  `source` longtext NOT NULL,
+  `parse` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `scan_id_idx` (`scan_id`),
+  CONSTRAINT `fk_scan` FOREIGN KEY (`scan_id`) REFERENCES `repository_scans`(`id`) ON DELETE CASCADE
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

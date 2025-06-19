@@ -14,4 +14,9 @@ export class ScanController {
   create(@Param('appId') appId: string) {
     return this.service.create(Number(appId));
   }
+
+  @Get(':scanId/files')
+  findFiles(@Param('scanId') scanId: string) {
+    return this.service.findFiles(Number(scanId));
+  }
 }
