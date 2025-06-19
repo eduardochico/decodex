@@ -3,6 +3,7 @@ import { tmpdir } from 'os';
 import { join, relative } from 'path';
 import { spawn } from 'child_process';
 import Parser from 'tree-sitter';
+import { buildStructure } from './build-structure';
 
 async function exec(cmd: string, args: string[], options: { cwd?: string } = {}): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -32,6 +33,7 @@ export interface FileParseResult {
   filename: string;
   source: string;
   parse: string;
+  structure: string;
 }
 
 export async function runTreeSitter(
@@ -64,6 +66,7 @@ export async function runTreeSitter(
       filename: relative(targetDir, file),
       source: code,
       parse: tree.rootNode.toString(),
+      structure: buildStructure(tree.rootNode, code),
     });
   }
 

@@ -113,16 +113,13 @@ export class ScanService {
       const filesWithAnalysis: Partial<ScanFile>[] = [];
       for (const [index, r] of results.entries()) {
         let analysis = '';
-        try {
-          analysis = await this.llm.describeFile(repoParse, r.filename, r.source);
-        } catch (e) {
-          analysis = `LLM error: ${e instanceof Error ? e.message : String(e)}`;
-        }
+        // analysis = await this.llm.describeFile(repoParse, r.filename, r.source);
         filesWithAnalysis.push({
           scan: { id: scanId } as Scan,
           filename: r.filename,
           source: r.source,
           parse: r.parse,
+          structure: r.structure,
           analysis,
         });
         const progress = 50 + Math.round(((index + 1) / results.length) * 50);
