@@ -20,6 +20,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useApplications } from './ApplicationsContext';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -115,9 +117,14 @@ export default function RepositoryScanning() {
       <Dialog open={Boolean(selectedLog)} onClose={() => setSelectedLog(null)} fullWidth maxWidth="md">
         <DialogTitle>Scan Output</DialogTitle>
         <DialogContent dividers>
-          <Box component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', m: 0 }}>
-            {selectedLog?.output}
-          </Box>
+          <SyntaxHighlighter
+            language="text"
+            style={atomDark}
+            customStyle={{ margin: 0 }}
+            wrapLongLines
+          >
+            {selectedLog?.output || ''}
+          </SyntaxHighlighter>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSelectedLog(null)}>Close</Button>
