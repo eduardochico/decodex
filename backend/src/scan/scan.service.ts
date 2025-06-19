@@ -44,20 +44,24 @@ export class ScanService {
   }
 
   private async runScan(scanId: number, appId: number) {
+    console.log(`[scan] Starting scan ${scanId} for application ${appId}`);
     const app = await this.appRepo.findOne({ where: { id: appId } });
     if (!app) {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Application not found',
       });
+      console.log(`[scan] Application ${appId} not found`);
       return;
     }
+    console.log(`[scan] Using repository URL ${app.gitUrl}`);
 
     if (!/^https?:\/\/.+/.test(app.gitUrl)) {
       await this.repo.update(scanId, {
         status: 'error',
         output: 'Invalid repository URL',
       });
+      console.log('[scan] Invalid repository URL');
       return;
     }
 
@@ -80,8 +84,10 @@ export class ScanService {
         status: 'error',
         output: 'Language not supported by tree-sitter',
       });
+      console.log(`[scan] Language ${app.language} not supported`);
       return;
     }
+    console.log(`[scan] Using grammar ${grammar.module} with extension ${grammar.ext}`);
 
     try {
       const results = await runTreeSitter(
@@ -89,6 +95,7 @@ export class ScanService {
         grammar.module,
         grammar.ext,
       );
+      console.log(`[scan] runTreeSitter returned ${results.length} results`);
       const filesWithAnalysis: Partial<ScanFile>[] = [];
       for (const r of results) {
         let analysis = '';
@@ -107,9 +114,11 @@ export class ScanService {
       }
       await this.fileRepo.save(filesWithAnalysis);
       await this.repo.update(scanId, { status: 'completed' });
+      console.log(`[scan] Scan ${scanId} completed`);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       await this.repo.update(scanId, { status: 'error', output: message });
+      console.log(`[scan] Scan ${scanId} failed: ${message}`);
     }
   }
 }
