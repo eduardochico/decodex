@@ -107,13 +107,13 @@ export class ScanService {
       const results = await runTreeSitter(app.gitUrl, grammar.module, grammar.ext);
       console.log(`[scan] runTreeSitter returned ${results.length} results`);
       await this.repo.update(scanId, { stage: 'Analyzing files', progress: 50 });
-      const repoParse = results
-        .map(r => `File: ${r.filename}\n${r.parse}`)
+      const repoStructure = results
+        .map(r => `File: ${r.filename}\n${r.structure}`)
         .join('\n\n');
       const filesWithAnalysis: Partial<ScanFile>[] = [];
       for (const [index, r] of results.entries()) {
         let analysis = '';
-        // analysis = await this.llm.describeFile(repoParse, r.filename, r.source);
+        analysis = await this.llm.describeFile(repoStructure, r.filename, r.source);
         filesWithAnalysis.push({
           scan: { id: scanId } as Scan,
           filename: r.filename,
