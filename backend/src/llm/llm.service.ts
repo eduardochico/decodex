@@ -12,10 +12,10 @@ export class LlmService {
     this.chat = new ChatOpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, modelName: 'gpt-4' });
   }
 
-  async describeFile(repoParse: string, filename: string, source: string): Promise<string> {
+  async describeFile(repoStructure: string, filename: string, source: string): Promise<string> {
     const messages = [
       new SystemMessage('You analyze source code.'),
-      new HumanMessage(`Tree-sitter output of the repository:\n${repoParse}`),
+      new HumanMessage(`Structure of repository:\n${repoStructure}`),
       new HumanMessage(
         `Source code of file ${filename}:\n${source}\n\nDescribe the main responsibility of this file.`,
       ),
